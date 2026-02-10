@@ -1,0 +1,50 @@
+@use "./variables" as *;
+
+.board-list {
+  min-width: 280px;
+  background: rgba(15, 23, 42, 0.96);
+  border-radius: $radius-lg;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  padding: $space-md;
+  color: $color-text;
+}
+
+.board-list__header {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.board-list__title-button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  flex: 1;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.board-list__drag-handle {
+  cursor: grab;
+  padding: 2px;
+  border-radius: $radius-sm;
+  border: none;
+  background: transparent;
+  color: inherit;
+}
+
+.board-list__cards {
+  margin-top: $space-md;
+  display: grid;
+  gap: $space-sm;
+}
+
+.board-list__add-card {
+  margin-top: $space-md;
+  display: flex;
+  gap: $space-sm;
+}
+

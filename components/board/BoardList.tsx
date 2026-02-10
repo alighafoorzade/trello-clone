@@ -1,15 +1,20 @@
 'use client';
 
+import type { ButtonHTMLAttributes } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useBoardStore } from "@/store/boardStore";
-import CardItem from "./CardItem";
+import SortableCardItem from "./SortableCardItem";
 
 export default function BoardList({
   listId,
   onOpenCard,
+  dragHandleRef,
+  dragHandleProps,
 }: {
   listId: string;
   onOpenCard: (cardId: string) => void;
+  dragHandleRef?: (node: HTMLButtonElement | null) => void;
+  dragHandleProps?: ButtonHTMLAttributes<HTMLButtonElement>;
 }) {
   const list = useBoardStore((s) => s.listsById[listId]);
   const cardsById = useBoardStore((s) => s.cardsById);
@@ -59,22 +64,40 @@ export default function BoardList({
     >
       <header style={{ display: "flex", gap: 8, alignItems: "center" }}>
         {!isEditingTitle ? (
-          <button
-            type="button"
-            onClick={() => setIsEditingTitle(true)}
-            aria-label={`Edit list title ${list.title}`}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "inherit",
-              padding: 0,
-              cursor: "pointer",
-              flex: 1,
-              textAlign: "left",
-            }}
-          >
-            <h2 style={{ margin: 0, fontSize: 16 }}>{list.title}</h2>
-          </button>
+          <>
+            <button
+              type="button"
+              ref={dragHandleRef}
+              {...dragHandleProps}
+              aria-label={`Drag handle for list ${list.title}`}
+              style={{
+                cursor: "grab",
+                padding: 2,
+                borderRadius: 4,
+                border: "none",
+                background: "transparent",
+                color: "inherit",
+              }}
+            >
+              ☰
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsEditingTitle(true)}
+              aria-label={`Edit list title ${list.title}`}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "inherit",
+                padding: 0,
+                cursor: "pointer",
+                flex: 1,
+                textAlign: "left",
+              }}
+            >
+              <h2 style={{ margin: 0, fontSize: 16 }}>{list.title}</h2>
+            </button>
+          </>
         ) : (
           <input
             aria-label={`List title ${listId}`}
@@ -107,9 +130,10 @@ export default function BoardList({
           const card = cardsById[cardId];
           if (!card) return null;
           return (
-            <CardItem
+            <SortableCardItem
               key={cardId}
               cardId={cardId}
+              listId={listId}
               onOpen={() => onOpenCard(cardId)}
             />
           );

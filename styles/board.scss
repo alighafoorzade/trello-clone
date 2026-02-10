@@ -1,0 +1,39 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+
+.board-root {
+  padding: $space-lg;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #1e293b, $color-bg 48%);
+  color: $color-text;
+}
+
+.board-header {
+  @include flex-center;
+  justify-content: space-between;
+  gap: $space-md;
+  margin-bottom: $space-lg;
+
+  &__title {
+    font-size: clamp(1.5rem, 2.1vw, 2rem);
+    font-weight: 600;
+  }
+}
+
+.board-lists {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-md;
+  padding-bottom: $space-md;
+  overflow-x: auto;
+  @include scrollbar-track;
+}
+
+.board-add-list {
+  min-width: 280px;
+  padding: $space-md;
+  border-radius: $radius-lg;
+  border: 1px dashed rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.7);
+}
+

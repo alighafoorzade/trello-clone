@@ -96,6 +96,18 @@ describe("board store", () => {
     expect(next.listsById[secondListId].cardIds[0]).toBe(cardId);
   });
 
+  it("ignores move for invalid list or card ids", () => {
+    const prev = getSnapshot();
+
+    act(() => {
+      useBoardStore
+        .getState()
+        .moveCard("missing", "l-does-not-exist", "l-other", 0);
+    });
+
+    expect(getSnapshot()).toEqual(prev);
+  });
+
   it("can add a comment to a card", () => {
     const initial = useBoardStore.getState();
     const firstListId = initial.board.listOrder[0];

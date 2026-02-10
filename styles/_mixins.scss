@@ -1,0 +1,35 @@
+@use "./variables" as *;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin scrollbar-track {
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.5);
+    border-radius: 999px;
+  }
+}
+
+@mixin elevated-surface {
+  background: $color-surface;
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-soft;
+}
+

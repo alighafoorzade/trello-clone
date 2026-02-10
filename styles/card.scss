@@ -1,0 +1,21 @@
+@use "./variables" as *;
+
+.board-card {
+  padding: $space-md;
+  border-radius: $radius-md;
+  background: $color-card;
+  border: 1px solid $color-card-border;
+  color: $color-text;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-align: left;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.65);
+    background: lighten($color-card, 2%);
+  }
+}
+

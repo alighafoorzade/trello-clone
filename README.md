@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Trello Clone – Next.js 14, Zustand, DnD, SCSS
+
+This is a small Trello-like board built with **Next.js 14 (App Router)** and **TypeScript**, using:
+
+- **Zustand** for global board state + localStorage persistence
+- **@dnd-kit** for drag & drop of lists and cards
+- **SCSS** for a simple but polished UI
+- **Jest + React Testing Library** for tests
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and start the dev server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` – start dev server
+- `npm run build` – production build
+- `npm start` – run built app
+- `npm test` – Jest test suite
+- `npm run lint` – ESLint / Biome linting
 
-## Learn More
+## Architecture & Data Model
 
-To learn more about Next.js, take a look at the following resources:
+The app uses the App Router (`app/` directory) with a single board page:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `app/layout.tsx` – HTML shell, global SCSS import
+- `app/page.tsx` – renders `BoardPage`
+- `components/board/*` – board, list, card, modal, DnD wrappers
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Board state is normalized and managed in Zustand:
 
-## Deploy on Vercel
+- `Board`: `{ id, title, listOrder: string[] }`
+- `List`: `{ id, title, cardIds: string[] }`
+- `Card`: `{ id, title, description?, commentIds: string[] }`
+- `Comment`: `{ id, cardId, text, createdAt }`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Everything is stored in `store/boardStore.ts` and persisted to `localStorage` via helpers in `lib/storage/localStorage.ts` with guards so it’s safe on the server.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Drag & Drop
+
+`@dnd-kit/core` and `@dnd-kit/sortable` provide:
+
+- Horizontal list reordering
+- Vertical and cross-list card moves
+
+Pure drag-end logic lives in `lib/board/dnd.ts` and is unit-tested in `__tests__/dndHandlers.test.ts`.
+
+## Styles
+
+Global SCSS entry: `app/globals.scss`, which wires:
+
+- `styles/_variables.scss` – color/spacing tokens
+- `styles/_mixins.scss` – layout helpers, scrollbar styling
+- `styles/board.scss`, `styles/list.scss`, `styles/card.scss`, `styles/modal.scss`
+
+The layout is responsive with horizontal scrolling for lists on smaller viewports.
+
+## Tests
+
+Key tests live under `__tests__/`:
+
+- Store and persistence: `boardStore.test.ts`, `localStorage.test.ts`
+- Pure utils: `ordering.test.ts`, `dndHandlers.test.ts`
+- UI wiring: `BoardPage.test.tsx`
+
+Run them with:
+
+```bash
+npm test
+```
